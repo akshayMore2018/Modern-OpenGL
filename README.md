@@ -8,3 +8,6 @@ OpenGL context in SDL, Vertex Buffer Objects and Shaders.
 g++ main.cpp Game.cpp -o main -lSDL2 -lGLEW -lglut -lGL
 
 ```
+
+
+![output](window.png)
