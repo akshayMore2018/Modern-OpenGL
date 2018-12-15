@@ -61,7 +61,7 @@ void Game::init(const char* title)
     //copy the data into the currently bound buffer.
     glBufferData(GL_ARRAY_BUFFER,9*sizeof(float),positions,GL_STATIC_DRAW);
 
-    
+    unsigned int vao=0;
     glGenVertexArrays(1,&vao);
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER,vbo);
@@ -81,7 +81,7 @@ void Game::init(const char* title)
     "#version 130\n"
     "out vec4 color;"
     "void main(){"
-    "color = vec4(0.5,0.0,0.5,1.0);"
+    "color = vec4(0.5,0.7,0.2,1.0);"
     "}";
 
 
