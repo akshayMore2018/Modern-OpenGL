@@ -15,9 +15,9 @@ int main()
 	while(game.shouldExit())
 	{
 		frameStart=SDL_GetTicks();
-		game.clear(0.0f,0.15f,0.3f,1.0f);
 		game.event();
 		game.update();
+		game.render();
 
 		frameTime=SDL_GetTicks()-frameStart;
 

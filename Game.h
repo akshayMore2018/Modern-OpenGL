@@ -12,7 +12,7 @@ public:
 	void init(const char* title);
 	void event();
 	void update();
-	void clear(float r, float g,float b,float a);
+	void render();
 	void clean();
 	inline bool shouldExit(){return m_IsRunning;}
 
