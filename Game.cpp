@@ -47,20 +47,64 @@ void Game::init(const char* title)
 
 
     //mesh
-    float positions[6]={
-            -0.5f,-0.5f,  /* first vertex*/
-             0.0f, 0.5f,  /* second vertex*/
-             0.5f,-0.5f   /* third vertex*/
+    float positions[9]={
+             0.0f, 0.5f, 0.0f,  /* first vertex*/
+             0.5f,-0.5f, 0.0f,  /* second vertex*/
+            -0.5f,-0.5f, 0.0f   /* third vertex*/
         };
 
 
-    unsigned int buffer;
-    //generate 1 buffer
-    glGenBuffers(1,&buffer);
-    glBindBuffer(GL_ARRAY_BUFFER,buffer);
-    glBufferData(GL_ARRAY_BUFFER,6*sizeof(float),positions,GL_STATIC_DRAW);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,sizeof(float)*2,NULL);
+    unsigned int vbo=0;
+    //generate 1 empty buffer
+    glGenBuffers(1,&vbo);
+    glBindBuffer(GL_ARRAY_BUFFER,vbo);
+    //copy the data into the currently bound buffer.
+    glBufferData(GL_ARRAY_BUFFER,9*sizeof(float),positions,GL_STATIC_DRAW);
+
+    
+    glGenVertexArrays(1,&vao);
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER,vbo);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(float)*3,NULL);
     glEnableVertexAttribArray(0);
+
+
+    const char* vertex_shader=
+    "#version 130\n"
+    "in vec4 position;"
+    "void main()"
+    "{"
+    "gl_Position = position;"
+    "}";
+
+    const char* fragment_shader=
+    "#version 130\n"
+    "out vec4 color;"
+    "void main(){"
+    "color = vec4(0.5,0.0,0.5,1.0);"
+    "}";
+
+
+    unsigned int vs=glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vs,1,&vertex_shader,NULL);
+    glCompileShader(vs);
+
+
+    unsigned int fs=glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fs,1,&fragment_shader,NULL);
+    glCompileShader(fs);
+
+
+    unsigned int program=glCreateProgram();
+    glAttachShader(program,vs);
+    glAttachShader(program,fs);
+
+    glLinkProgram(program);
+    glUseProgram(program);
+    glBindVertexArray(vao);
+
+
+
 
 
 }
@@ -84,6 +128,7 @@ void Game::render()
 {
     glClearColor(0.0f,0.15f,0.3f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
 
     glDrawArrays(GL_TRIANGLES,0,3);
 

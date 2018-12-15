@@ -21,4 +21,5 @@ private:
 	SDL_GLContext glContext;
 	SDL_Event m_Event;
 	bool m_IsRunning;
+	unsigned int vao;
 };
