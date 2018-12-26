@@ -1,34 +1,22 @@
 #include <iostream>
-#include "SDL2/SDL.h"
-#include "Game.h"
+#include "Application.h"
 
 int main()
 {
-	const int FPS=60;
-	const int FRAMEDELAY=1000/FPS;
-	unsigned int frameStart;
-	unsigned int frameTime;
-	Game game;
+
+	Application app;
+
+	app.init();
 	
-	game.init("GameWindow");
-
-	while(game.shouldExit())
+	// Game loop
+	while (app.running())
 	{
-		frameStart=SDL_GetTicks();
-		game.event();
-		game.update();
-		game.render();
-
-		frameTime=SDL_GetTicks()-frameStart;
-
-		if(frameTime<FRAMEDELAY)
-		{
-			SDL_Delay(FRAMEDELAY-frameTime);
-		}
-
+		app.events();
+		app.render();		
 	}
 
-	game.clean();
+	app.clean();
 
+	return EXIT_SUCCESS;
 }
 
