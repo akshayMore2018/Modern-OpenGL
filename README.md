@@ -1,5 +1,5 @@
 # Modern-OpenGL
-OpenGL context in SDL, Vertex Buffer Objects and Shaders. 
+OpenGL context in GLFW, Vertex Buffer Objects and Shaders. 
 
 
 ### Terminal
