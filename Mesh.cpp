@@ -17,6 +17,22 @@ static unsigned int CreateShader(const char* source, unsigned int type);
 
 Mesh::Mesh()
 {
+
+	ShaderSource src = LoadFile("shaders/basic.shader");
+	std::cout << "VERTEX" << std::endl;
+	std::cout << src.vertexSource << std::endl;
+	std::cout << "FRAGMENT" << std::endl;
+	std::cout << src.fragmentSource << std::endl;
+	unsigned int vs = CreateShader(src.vertexSource.c_str(),GL_VERTEX_SHADER);
+	unsigned int fs = CreateShader(src.fragmentSource.c_str(), GL_FRAGMENT_SHADER);
+	
+	program = glCreateProgram();
+	glAttachShader(program, vs);
+	glAttachShader(program, fs);
+	glLinkProgram(program);
+
+
+
 	float vertices[18] =
 	{
 		-0.5f,-0.5f, 0.0f, //0
@@ -37,7 +53,7 @@ Mesh::Mesh()
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 
@@ -46,26 +62,21 @@ Mesh::Mesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	
-
-
-
-	ShaderSource src = LoadFile("shaders/basic.shader");
-	std::cout << "VERTEX" << std::endl;
-	std::cout << src.vertexSource << std::endl;
-	std::cout << "FRAGMENT" << std::endl;
-	std::cout << src.fragmentSource << std::endl;
-	unsigned int vs = CreateShader(src.vertexSource.c_str(),GL_VERTEX_SHADER);
-	unsigned int fs = CreateShader(src.fragmentSource.c_str(), GL_FRAGMENT_SHADER);
-	
-	unsigned int program = glCreateProgram();
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
 	glUseProgram(program);
+	int location=glGetUniformLocation(program,"u_Color");
+	glUniform4f(location,0.2,0.3,0.0,1.0);
+
+	glUseProgram(0);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER,0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 }
 
 void Mesh::render()
 {
+	glUseProgram(program);
+	glBindVertexArray(vao);
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,NULL);
 }
 
