@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+
+
 //#include <glm/glm.hpp>
 
 struct ShaderSource
@@ -51,20 +53,17 @@ Mesh::Mesh()
 	glGenVertexArrays(1,&vao);
 	glBindVertexArray(vao);
 
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 4 * 3 * sizeof(float), vertices, GL_STATIC_DRAW);
+	vb=new VertexBuffer(vertices, 4*3*sizeof(float));
+
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 
+    ib=new IndexBuffer(indices, 6);
 
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-	
 	glUseProgram(program);
 	int location=glGetUniformLocation(program,"u_Color");
-	glUniform4f(location,0.2,0.3,0.0,1.0);
+	glUniform4f(location,0.6,0.3,0.0,1.0);
 
 	glUseProgram(0);
 	glBindVertexArray(0);
@@ -72,11 +71,20 @@ Mesh::Mesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 }
 
+Mesh::~Mesh()
+{
+	//TODO proper deallocation
+	delete vb;
+	delete ib;
+}
+
+
 void Mesh::render()
 {
 	glUseProgram(program);
 	glBindVertexArray(vao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo);
+	ib->Bind();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,NULL);
 }
 
